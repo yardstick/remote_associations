@@ -20,7 +20,7 @@ module RemoteAssociations::ActiveRecord::RelationExtensions
     @records.each do |record|
       foreign_key = record.send(association.foreign_key)
       if associated_records.has_key?(foreign_key)
-        record.instance_variable_set(Helpers::variable_from(association.name), associated_records[foreign_key].first)
+        record.instance_variable_set(RemoteAssociations::Helpers::variable_from(association.name), associated_records[foreign_key].first)
       end
     end
   end

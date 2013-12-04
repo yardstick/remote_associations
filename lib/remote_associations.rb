@@ -1,3 +1,5 @@
+require 'active_support'
+
 require 'remote_associations/version'
 require 'remote_associations/errors'
 require 'remote_associations/remote_association'
@@ -16,7 +18,7 @@ module RemoteAssociations
   attr_accessor :auth_token
 
   def auth_token
-    raise RemoteAssociations::MissingTokenError, "Auth token must be set in order to be used in remote associations" if @auth_token.nil?
+    raise RemoteAssociations::Errors::MissingTokenError, "Auth token must be set in order to be used in remote associations" if @auth_token.nil?
     @auth_token
   end
 
@@ -30,7 +32,7 @@ module RemoteAssociations
     return value unless value.nil?
 
     if remote_associations[method].fetch_block.nil?
-      raise RemoteAssociations::MissingFetchBlockError, "Fetch block not given for remote association: #{method.to_s}"
+      raise RemoteAssociations::Errors::MissingFetchBlockError, "Fetch block not given for remote association: #{method.to_s}"
     end
 
     value = instance_exec(&remote_associations[method].fetch_block)
@@ -53,5 +55,4 @@ module RemoteAssociations
   end
 end
 
-require 'remote_associations/relation_extensions'
-ActiveRecord::Relation.send(:prepend, RemoteAssociations::RelationExtensions)
+require 'remote_associations/active_record'
