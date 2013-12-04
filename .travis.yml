@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+    - 2.0.0
+
+gemfile:
+    - Gemfile
+
+script: time './script/travis.sh'
+
+branches:
+    only: master
