@@ -7,9 +7,11 @@ Gem::Specification.new do |spec|
   spec.name          = "remote_associations"
   spec.version       = RemoteAssociations::VERSION
   spec.authors       = ["Jason Wall"]
-  spec.email         = ["javajo@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.email         = ["jasonw@getyardstick.com"]
+  spec.description   = %q{Gem for preloading remote data to a relation of active record instances}
+  spec.summary       = %q{Similar to how you can preload children or parents records for your ActiveRecord::Relations,
+    use remote associations to tell ActiveRecord how to get all the remote entities associated with a given relation
+    in one HTTP request}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,6 +20,13 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.required_ruby_version = '>= 2.0.0' # Module.prepend
+
+  spec.add_runtime_dependency "activesupport", '>= 3.2.16'
+  spec.add_runtime_dependency "activerecord", '>= 3.2.16'
+
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec", ">= 2.14.0"
+  spec.add_development_dependency "mocha", '~> 0.14.0'
 end
