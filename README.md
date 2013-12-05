@@ -16,10 +16,6 @@ Or install it yourself as:
 
     $ gem install remote_associations
 
-## Usage
-
-TODO: Write usage instructions here
-
 ## Contributing
 
 1. Fork it
