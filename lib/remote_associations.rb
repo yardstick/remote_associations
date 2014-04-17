@@ -52,6 +52,8 @@ module RemoteAssociations
     def belongs_to_remote(name, options = {}, &block)
       remote_associations[name] = RemoteAssociation.new(name, options, &block)
     end
+
+    alias has_remote_equivalent belongs_to_remote
   end
 end
 

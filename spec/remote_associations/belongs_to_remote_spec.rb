@@ -16,4 +16,11 @@ describe RemoteAssociations do
       expect{ subject.user_missing_block }.to raise_error(RemoteAssociations::Errors::MissingFetchBlockError)
     end
   end
+
+  describe :has_remote_equivalent do # alias of belongs_to_remote
+    subject { User.new.poker_user }
+
+    # just want the happy path to ensure the alias is working
+    it { should eq('bloop') }
+  end
 end
