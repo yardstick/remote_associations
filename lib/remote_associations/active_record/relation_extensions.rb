@@ -22,17 +22,11 @@ module RemoteAssociations::ActiveRecord::RelationExtensions
     groups = @records.group_by { |record| record.send(association.foreign_key) }
     associated_records = association.klass.all(@auth_token, ids: groups.keys).group_by { |x| x.id }
     @records = @records.select do |record|
-      foreign_key_value = record.send(association.foreign_key)
-      member_variable = RemoteAssociations::Helpers::variable_from(association.name)
-      if associated_records.has_key?(foreign_key_value)
-        record.instance_variable_set(member_variable, associated_records[foreign_key_value].first)
-      end
-
-      # determine if keep in the records list
+      remote_value = assign_remote_value(association, record, associated_records)
       if null_discards[association.name]
-        record.instance_variable_get(member_variable).present?
+        remote_value.present?
       else
-        true # Keep the record
+        true
       end
     end
   end
@@ -65,5 +59,14 @@ module RemoteAssociations::ActiveRecord::RelationExtensions
   def auth_token!(token)
     @auth_token = token
     self
+  end
+
+private
+
+  def assign_remote_value(association, record, associated_records)
+    foreign_key_value = record.send(association.foreign_key)
+    if associated_records.has_key?(foreign_key_value)
+      record.instance_variable_set(RemoteAssociations::Helpers::variable_from(association.name), associated_records[foreign_key_value].first)
+    end
   end
 end
