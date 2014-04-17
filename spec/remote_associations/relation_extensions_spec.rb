@@ -5,6 +5,7 @@ describe RemoteAssociations::ActiveRecord::RelationExtensions do
   let(:comment1) { Comment.new(post_id: post_id) }
   let(:comment2) { Comment.new(post_id: comment1.post_id) }
   let(:records) { [comment1, comment2] }
+  let(:remote_post) { RemotePost.new(id: comment1.post_id) }
 
   subject { RemoteAssociations::Relation.new(records) }
 
@@ -22,10 +23,16 @@ describe RemoteAssociations::ActiveRecord::RelationExtensions do
       results = subject.joins_remote(:post).auth_token(token).exec_queries
       expect(results).to be_empty
     end
+
+    it 'should be fine if the thing is actually in the remote list' do
+      RemotePost.expects(:all).with(token, ids: [comment1.post_id]).returns([remote_post])
+      results = subject.joins_remote(:post).auth_token(token).exec_queries
+      expect(results).to include(comment1)
+      expect(results).to include(comment2)
+    end
   end
 
   describe :exec_queries do
-    let(:remote_post) { RemotePost.new(id: comment1.post_id) }
     let(:token) { '1235' }
 
     it 'should ask the class to load the records' do
