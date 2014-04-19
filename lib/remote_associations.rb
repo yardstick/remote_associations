@@ -26,33 +26,29 @@ module RemoteAssociations
     self.class.remote_associations
   end
 
-  def method_missing(method, *args, &block)
-    return super unless remote_associations.has_key?(method)
-    value = instance_variable_get(Helpers.variable_from(method))
-    return value unless value.nil?
-
-    association = remote_associations[method]
-
-    if association.fetch_block.nil?
-      value = association.klass.find(args.shift, send(association.foreign_key))
-    else
-      value = instance_exec(&association.fetch_block)
-    end
-    instance_variable_set(Helpers.variable_from(method), value)
-  end
-
-  def respond_to_missing?(method, include_priv = false)
-    return true if remote_associations.has_key?(method)
-    super
-  end
-
   module ClassMethods
     def remote_associations
       @remote_associations ||= {}
     end
 
     def belongs_to_remote(name, options = {}, &block)
-      remote_associations[name] = RemoteAssociation.new(name, options, &block)
+      association = remote_associations[name] = RemoteAssociation.new(name, options, &block)
+
+      define_method(association.getter) do |token = nil|
+        value = instance_variable_get(association.member)
+        return value if value.present?
+
+        if association.fetch_block.nil?
+          instance_variable_set(association.member, association.klass.find(token, send(association.foreign_key)))
+        else
+          instance_variable_set(association.member, instance_exec(&association.fetch_block))
+        end
+      end
+
+      define_method(association.setter) do |value|
+        instance_variable_set(association.member, value)
+        instance_variable_set(Helpers::variable_from(association.foreign_key), value.send(association.primary_key))
+      end
     end
 
     alias has_remote_equivalent belongs_to_remote

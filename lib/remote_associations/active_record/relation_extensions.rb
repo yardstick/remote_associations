@@ -66,7 +66,7 @@ private
   def assign_remote_value(association, record, associated_records)
     foreign_key_value = record.send(association.foreign_key)
     if associated_records.has_key?(foreign_key_value)
-      record.instance_variable_set(RemoteAssociations::Helpers::variable_from(association.name), associated_records[foreign_key_value].first)
+      record.instance_variable_set(association.member, associated_records[foreign_key_value].first)
     end
   end
 end
