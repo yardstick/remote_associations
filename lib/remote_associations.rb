@@ -31,11 +31,13 @@ module RemoteAssociations
     value = instance_variable_get(Helpers.variable_from(method))
     return value unless value.nil?
 
-    if remote_associations[method].fetch_block.nil?
-      raise RemoteAssociations::Errors::MissingFetchBlockError, "Fetch block not given for remote association: #{method.to_s}"
-    end
+    association = remote_associations[method]
 
-    value = instance_exec(&remote_associations[method].fetch_block)
+    if association.fetch_block.nil?
+      value = association.klass.find(args.shift, send(association.foreign_key))
+    else
+      value = instance_exec(&association.fetch_block)
+    end
     instance_variable_set(Helpers.variable_from(method), value)
   end
 

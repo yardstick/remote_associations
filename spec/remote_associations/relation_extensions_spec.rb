@@ -44,8 +44,9 @@ describe RemoteAssociations::ActiveRecord::RelationExtensions do
 
     it 'should still work (no nil pointer errors) if the relationship is orphaned' do
       RemotePost.expects(:all).with(token, ids: [comment1.post_id]).returns([])
+      RemotePost.expects(:find).at_most(2).with(token, post_id).returns(:anything_really) # once for each comment
       subject.includes_remote(:post).auth_token(token).exec_queries.each do |comment|
-        expect { comment.post }.to raise_error RemoteAssociations::Errors::MissingFetchBlockError
+        expect(comment.post(token)).to eq(:anything_really)
       end
     end
   end
