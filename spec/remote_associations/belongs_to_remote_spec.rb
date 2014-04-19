@@ -26,6 +26,20 @@ describe RemoteAssociations do
         expect(subject.user).to eq(:the_user_record_from_remote_service)
       end
     end
+
+    context 'generated attr_setter' do
+      let(:remote_user) { RemoteUser.new(:id => 88) }
+
+      it 'should assign the id of the remote object to the foreign key' do
+        subject.user = remote_user
+        expect(subject.user_id).to eq(88)
+      end
+
+      it 'should assign the value to the member variable' do
+        subject.user = remote_user
+        expect(subject.user).to eq(remote_user)
+      end
+    end
   end
 
   describe :has_remote_equivalent do # alias of belongs_to_remote
