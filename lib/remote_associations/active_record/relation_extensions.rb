@@ -21,7 +21,7 @@ module RemoteAssociations::ActiveRecord::RelationExtensions
     association = model.remote_associations[association]
     groups = @records.group_by { |record| record.send(association.foreign_key) }
     associated_records = association.klass.all(@auth_token, ids: groups.keys).group_by { |x| x.id }
-    @records = @records.select do |record|
+    @records.select! do |record|
       remote_value = assign_remote_value(association, record, associated_records)
       if null_discards[association.name]
         remote_value.present?
