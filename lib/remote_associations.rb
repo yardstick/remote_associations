@@ -8,7 +8,7 @@ module RemoteAssociations
   extend ActiveSupport::Concern
 
   module Helpers
-    extend self
+    module_function
 
     def variable_from(method)
       :"@#{method}"
