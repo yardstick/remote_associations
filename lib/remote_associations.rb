@@ -13,6 +13,10 @@ module RemoteAssociations
     def variable_from(method)
       :"@#{method}"
     end
+
+    def setter_for(method)
+      :"#{method}="
+    end
   end
 
   attr_accessor :auth_token
@@ -46,8 +50,9 @@ module RemoteAssociations
       end
 
       define_method(association.setter) do |value|
+        raise Errors::AssociationTypeMismatch, "expected #{association.klass.name} got #{value.class.name})" unless value.is_a?(association.klass)
         instance_variable_set(association.member, value)
-        instance_variable_set(Helpers::variable_from(association.foreign_key), value.send(association.primary_key))
+        send(Helpers::setter_for(association.foreign_key), value.send(association.primary_key))
       end
     end
 

@@ -39,6 +39,10 @@ describe RemoteAssociations do
         subject.user = remote_user
         expect(subject.user).to eq(remote_user)
       end
+
+      it 'should raise an error if there is a class mismatch' do
+        expect{ subject.user = "Jimbob User" }.to raise_error RemoteAssociations::Errors::AssociationTypeMismatch
+      end
     end
   end
 
