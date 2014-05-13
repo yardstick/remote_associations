@@ -16,4 +16,20 @@ class RemoteAssociations::RemoteAssociation
     return options[:foreign_key] if options.has_key?(:foreign_key)
     :"#{name}_id"
   end
+
+  def primary_key
+    :id
+  end
+
+  def member
+    :"@#{getter}"
+  end
+
+  def getter
+    :"#{@name}"
+  end
+
+  def setter
+    :"#{getter}="
+  end
 end

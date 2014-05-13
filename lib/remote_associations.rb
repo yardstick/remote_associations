@@ -8,10 +8,14 @@ module RemoteAssociations
   extend ActiveSupport::Concern
 
   module Helpers
-    extend self
+    module_function
 
     def variable_from(method)
       :"@#{method}"
+    end
+
+    def setter_for(method)
+      :"#{method}="
     end
   end
 
@@ -26,32 +30,33 @@ module RemoteAssociations
     self.class.remote_associations
   end
 
-  def method_missing(method, *args, &block)
-    return super unless remote_associations.has_key?(method)
-    value = instance_variable_get(Helpers.variable_from(method))
-    return value unless value.nil?
-
-    if remote_associations[method].fetch_block.nil?
-      raise RemoteAssociations::Errors::MissingFetchBlockError, "Fetch block not given for remote association: #{method.to_s}"
-    end
-
-    value = instance_exec(&remote_associations[method].fetch_block)
-    instance_variable_set(Helpers.variable_from(method), value)
-  end
-
-  def respond_to_missing?(method, include_priv = false)
-    return true if remote_associations.has_key?(method)
-    super
-  end
-
   module ClassMethods
     def remote_associations
       @remote_associations ||= {}
     end
 
     def belongs_to_remote(name, options = {}, &block)
-      remote_associations[name] = RemoteAssociation.new(name, options, &block)
+      association = remote_associations[name] = RemoteAssociation.new(name, options, &block)
+
+      define_method(association.getter) do |token = nil|
+        value = instance_variable_get(association.member)
+        return value if value.present?
+
+        if association.fetch_block.nil?
+          instance_variable_set(association.member, association.klass.find(token, send(association.foreign_key)))
+        else
+          instance_variable_set(association.member, instance_exec(&association.fetch_block))
+        end
+      end
+
+      define_method(association.setter) do |value|
+        raise Errors::AssociationTypeMismatch, "expected #{association.klass.name} got #{value.class.name})" unless value.is_a?(association.klass)
+        instance_variable_set(association.member, value)
+        send(Helpers::setter_for(association.foreign_key), value.send(association.primary_key))
+      end
     end
+
+    alias has_remote_equivalent belongs_to_remote
   end
 end
 
