@@ -3,6 +3,7 @@ require 'active_support'
 require 'remote_associations/version'
 require 'remote_associations/errors'
 require 'remote_associations/remote_association'
+require 'remote_associations/collection_extensions'
 
 module RemoteAssociations
   extend ActiveSupport::Concern
