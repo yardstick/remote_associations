@@ -1,3 +1,5 @@
+require 'remote_associations/active_record'
+
 module RemoteAssociations
   class Relation
     prepend RemoteAssociations::ActiveRecord::RelationExtensions

@@ -2,6 +2,8 @@ require 'remote_associations'
 require 'mocha/api'
 require 'pry-byebug'
 
+require 'active_model'
+
 Dir[File.expand_path('support/**/*.rb', File.dirname(__FILE__))].each do |f|
   require Pathname.new(f).relative_path_from(Pathname.new(File.dirname(__FILE__)))
 end

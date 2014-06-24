@@ -23,8 +23,8 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.0.0' # Module.prepend
 
   spec.add_runtime_dependency "activesupport", '>= 3.2.16'
-  spec.add_runtime_dependency "activerecord", '>= 3.2.16'
 
+  spec.add_development_dependency "activerecord", '>= 3.2.16' # currently for active_model in the specs
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", ">= 2.14.0"

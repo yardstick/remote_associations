@@ -60,4 +60,7 @@ module RemoteAssociations
   end
 end
 
-require 'remote_associations/active_record'
+ActiveSupport.on_load(:active_record) do
+  require 'remote_associations/active_record'
+  ActiveRecord::Relation.send(:prepend, RemoteAssociations::ActiveRecord::RelationExtensions)
+end
