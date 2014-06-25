@@ -1,6 +1,6 @@
 require 'remote_associations'
 require 'mocha/api'
-require 'pry-byebug'
+require 'pry'
 
 require 'active_model'
 
