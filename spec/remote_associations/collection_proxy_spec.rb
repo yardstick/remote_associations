@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RemoteAssociations::CollectionProxy do
   let(:comment_attributes) do
     3.times.map do |i|
-      { post_id: Id.generate, user_id: Id.generate }
+      { :post_id => Id.generate, :user_id => Id.generate }
     end
   end
 
@@ -28,9 +28,9 @@ describe RemoteAssociations::CollectionProxy do
     let(:token) { 'something' }
 
     it 'should also preload the remote records' do
-      remote_post = RemotePost.new(id: comment_attributes.last[:post_id])
+      remote_post = RemotePost.new(:id => comment_attributes.last[:post_id])
       RemotePost.expects(:find).never
-      RemotePost.expects(:all).with(token, ids: comment_attributes.map { |x| x[:post_id] }).returns([remote_post])
+      RemotePost.expects(:all).with(token, :ids => comment_attributes.map { |x| x[:post_id] }).returns([remote_post])
       records = subject.joins_remote(:post).auth_token(token).records
       expect(records.length).to eq(1)
       records.each do |r|
@@ -47,7 +47,7 @@ describe RemoteAssociations::CollectionProxy do
 
       subject.records
 
-      comment_attributes << { post_id: Id.generate, user_id: Id.generate }
+      comment_attributes << { :post_id => Id.generate, :user_id => Id.generate }
 
       records = subject.includes_remote(:user).auth_token(token).records
       expect(records.length).to eq(4)

@@ -6,5 +6,5 @@ class User
 
   attr_accessor :username, :id, :permissions
 
-  has_remote_equivalent(:poker_user, class: RemoteUser) { 'bloop' }
+  has_remote_equivalent(:poker_user, :class => RemoteUser) { 'bloop' }
 end
