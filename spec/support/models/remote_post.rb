@@ -1,5 +1,5 @@
 class RemotePost
-  include ActiveModel::Model
+  include RemoteAssociations::ActiveModel
 
   attr_accessor :id
 

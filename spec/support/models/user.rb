@@ -1,7 +1,7 @@
 require 'support/models/remote_user'
 
 class User
-  include ActiveModel::Model
+  include RemoteAssociations::ActiveModel
   include RemoteAssociations
 
   attr_accessor :username, :id, :permissions

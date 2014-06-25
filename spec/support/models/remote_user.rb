@@ -1,5 +1,5 @@
 class RemoteUser
-  include ActiveModel::Model
+  include RemoteAssociations::ActiveModel
 
   attr_accessor :id
 

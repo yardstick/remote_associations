@@ -2,7 +2,7 @@ require 'support/models/remote_post'
 require 'support/models/user'
 
 class Comment
-  include ActiveModel::Model
+  include RemoteAssociations::ActiveModel
   include RemoteAssociations
 
   belongs_to_remote(:post, :class => RemotePost)
