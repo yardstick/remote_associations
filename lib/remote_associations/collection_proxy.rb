@@ -12,7 +12,7 @@ class RemoteAssociations::CollectionProxy
   end
 
   def records
-    return @records if @records.present?
+    return @records unless @records.nil?
     @records = @klass.nil? ? @block.call : map_results(@block.call)
     preload_remote_associations
     @records

@@ -22,7 +22,7 @@ module RemoteAssociations::CollectionExtensions
     @records.select! do |record|
       remote_value = assign_remote_value(association, record, associated_records)
       if null_discards[association.name]
-        remote_value.present?
+        !remote_value.nil?
       else
         true
       end
