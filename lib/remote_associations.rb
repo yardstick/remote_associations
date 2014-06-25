@@ -64,5 +64,5 @@ end
 
 ActiveSupport.on_load(:active_record) do
   require 'remote_associations/active_record'
-  ActiveRecord::Relation.send(:prepend, RemoteAssociations::ActiveRecord::RelationExtensions)
+  ActiveRecord::Relation.send(:include, RemoteAssociations::ActiveRecord::RelationExtensions)
 end

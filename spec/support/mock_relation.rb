@@ -2,7 +2,6 @@ require 'remote_associations/active_record'
 
 module RemoteAssociations
   class Relation
-    prepend RemoteAssociations::ActiveRecord::RelationExtensions
 
     attr_accessor :model
 
@@ -18,5 +17,7 @@ module RemoteAssociations
     def spawn
       self
     end
+
+    include RemoteAssociations::ActiveRecord::RelationExtensions
   end
 end
