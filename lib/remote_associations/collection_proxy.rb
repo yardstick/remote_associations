@@ -37,7 +37,7 @@ private
     clone
   end
 
-  def initialize_copy(old)
+  def initialize_copy(i_think_this_is_the_old_one)
     @records = nil
   end
 end
