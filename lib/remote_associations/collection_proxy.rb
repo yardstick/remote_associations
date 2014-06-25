@@ -36,6 +36,10 @@ private
   def spawn
     clone
   end
+
+  def initialize_copy(old)
+    @records = nil
+  end
 end
 
 ActiveSupport.on_load(:active_model_serializers) do

@@ -38,4 +38,19 @@ describe RemoteAssociations::CollectionProxy do
       end
     end
   end
+
+  describe :records do
+    let(:token) { 'be a token' }
+
+    it 'should recall the block if an association is included' do
+      RemoteUser.expects(:find).never
+
+      subject.records
+
+      comment_attributes << { post_id: Id.generate, user_id: Id.generate }
+
+      records = subject.includes_remote(:user).auth_token(token).records
+      expect(records.length).to eq(4)
+    end
+  end
 end
