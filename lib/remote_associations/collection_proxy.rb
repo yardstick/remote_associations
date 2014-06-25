@@ -12,7 +12,8 @@ class RemoteAssociations::CollectionProxy
   end
 
   def records
-    @records ||= @klass.nil? ? @block.call : map_results(@block.call)
+    return @records if @records.present?
+    @records = @klass.nil? ? @block.call : map_results(@block.call)
     preload_remote_associations
     @records
   end
@@ -20,14 +21,23 @@ class RemoteAssociations::CollectionProxy
   def map_results(results)
     results.map { |x| @klass.new(x) }
   end
+
+  # poor mans delegate so we don't have to reference rails
+  [:last, :length, :size, :count].each do |method|
+    define_method(method) { records.send(method) }
+  end
+
+  def model
+    @klass
+  end
+
+private
+
+  def spawn
+    clone
+  end
 end
 
 ActiveSupport.on_load(:active_model_serializers) do
-  RemoteAssociations::CollectionProxy.class_eval do
-    include ActiveModel::ArraySerializerSupport
-
-    def model
-      @klass
-    end
-  end
+  RemoteAssociations::CollectionProxy.send(:include, ActiveModel::ArraySerializerSupport)
 end
