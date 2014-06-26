@@ -53,4 +53,12 @@ describe RemoteAssociations::CollectionProxy do
       expect(records.length).to eq(4)
     end
   end
+
+  describe :== do
+    it 'should compare internal object collections of each other' do
+      other = RemoteAssociations::CollectionProxy.new(Comment) { comment_attributes }
+      expect(other).to eq(subject)
+      expect(subject).to eq(other)
+    end
+  end
 end

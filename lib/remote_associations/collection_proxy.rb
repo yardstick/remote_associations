@@ -31,6 +31,15 @@ class RemoteAssociations::CollectionProxy
     @klass
   end
 
+  def ==(other)
+    case other
+    when self.class
+      records == other.records
+    else
+      records == other
+    end
+  end
+
 private
 
   def spawn
