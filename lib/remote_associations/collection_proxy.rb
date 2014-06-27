@@ -42,6 +42,10 @@ class RemoteAssociations::CollectionProxy
     end
   end
 
+  def to_s
+    "#<#{self.class.name}<#{@klass}>:#{records.to_s}>"
+  end
+
 private
 
   def spawn
