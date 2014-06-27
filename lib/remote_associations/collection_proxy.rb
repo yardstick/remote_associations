@@ -24,7 +24,9 @@ class RemoteAssociations::CollectionProxy
 
   # poor mans delegate so we don't have to reference rails
   [:last, :length, :size, :count].each do |method|
-    define_method(method) { records.send(method) }
+    define_method(method) do |*args|
+      records.send(method, *args)
+    end
   end
 
   def model
