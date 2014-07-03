@@ -23,9 +23,46 @@ class RemoteAssociations::CollectionProxy
   end
 
   # poor mans delegate so we don't have to reference rails
-  [:last, :length, :size, :count].each do |method|
-    define_method(method) do |*args|
-      records.send(method, *args)
+  [
+    :[],
+    :at,
+    :collect,
+    :collect!,
+    :compact,
+    :compact!,
+    :count,
+    :drop,
+    :empty?,
+    :include?,
+    :fetch,
+    :join,
+    :last,
+    :length,
+    :map,
+    :map!,
+    :reject,
+    :reject!,
+    :reverse,
+    :reverse_each,
+    :reverse!,
+    :sample,
+    :select,
+    :select!,
+    :size,
+    :slice,
+    :slice!,
+    :sort,
+    :sort!,
+    :sort_by!,
+    :take,
+    :take_while,
+    :uniq,
+    :uniq!,
+    :values_at,
+    :zip
+  ].each do |method|
+    define_method(method) do |*args, &block|
+      records.send(method, *args, &block)
     end
   end
 
@@ -44,6 +81,10 @@ class RemoteAssociations::CollectionProxy
 
   def to_s
     "#<#{self.class.name}<#{@klass}>:#{records.to_s}>"
+  end
+
+  def inspect
+    to_s
   end
 
 private
