@@ -3,9 +3,13 @@ require 'active_support'
 require 'remote_associations/version'
 require 'remote_associations/errors'
 require 'remote_associations/remote_association'
+require 'remote_associations/collection_extensions'
+require 'remote_associations/collection_proxy'
 
 module RemoteAssociations
-  extend ActiveSupport::Concern
+  def self.included(base)
+    base.send(:extend, ClassMethods)
+  end
 
   module Helpers
     module_function
@@ -40,7 +44,7 @@ module RemoteAssociations
 
       define_method(association.getter) do |token = nil|
         value = instance_variable_get(association.member)
-        return value if value.present?
+        return value unless value.nil?
 
         if association.fetch_block.nil?
           instance_variable_set(association.member, association.klass.find(token, send(association.foreign_key)))
@@ -60,4 +64,7 @@ module RemoteAssociations
   end
 end
 
-require 'remote_associations/active_record'
+ActiveSupport.on_load(:active_record) do
+  require 'remote_associations/active_record'
+  ActiveRecord::Relation.send(:include, RemoteAssociations::ActiveRecord::RelationExtensions)
+end

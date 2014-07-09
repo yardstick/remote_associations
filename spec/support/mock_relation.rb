@@ -1,6 +1,7 @@
+require 'remote_associations/active_record'
+
 module RemoteAssociations
   class Relation
-    prepend RemoteAssociations::ActiveRecord::RelationExtensions
 
     attr_accessor :model
 
@@ -16,5 +17,8 @@ module RemoteAssociations
     def spawn
       self
     end
+
+    # alias_method_chain doesn't know about exec_queries unless we put this down here
+    include RemoteAssociations::ActiveRecord::RelationExtensions
   end
 end
