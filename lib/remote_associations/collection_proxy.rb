@@ -100,8 +100,7 @@ end
 
 ActiveSupport.on_load(:active_model_serializers) do
   begin
-    RemoteAssociations::CollectionProxy.send(:include, ActiveModel::ArraySerializer)
-  rescue NameError
     RemoteAssociations::CollectionProxy.send(:include, ActiveModel::ArraySerializerSupport)
+  rescue NameError
   end
 end
