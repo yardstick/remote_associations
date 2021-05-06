@@ -13,6 +13,15 @@ describe RemoteAssociations::ActiveRecord::RelationExtensions do
      it 'should put the association name in the remote includes list' do
       expect(subject.includes_remote(:post).remote_preloads).to include :post
     end
+
+    it 'should not cause preloads for an empty record set' do
+      relation = RemoteAssociations::Relation.new([])
+      relation = relation.includes_remote(:post)
+      # normally this should fail because we don't actually have an association called post in this mock relation class
+      # and that's kind of the test. we have an empty record set so the code asking for the association information never
+      # gets executed so this actually runs
+      expect(relation.to_a).to eq([])
+    end
   end
 
   describe :joins_remote do

@@ -10,6 +10,7 @@ module RemoteAssociations::CollectionExtensions
   end
 
   def preload_remote_associations
+    return if @records.empty?
     remote_preloads.each do |association|
       preload_remote_association(association)
     end
